@@ -18,26 +18,14 @@ public class RhythmActionGame : ModuleRules
 			"StateTreeModule",
 			"GameplayStateTreeModule",
 			"UMG",
-			"Slate"
+			"Slate",
+			"GameplayAbilities"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
 
 		PublicIncludePaths.AddRange(new string[] {
 			"RhythmActionGame",
-			"RhythmActionGame/Variant_Platforming",
-			"RhythmActionGame/Variant_Platforming/Animation",
-			"RhythmActionGame/Variant_Combat",
-			"RhythmActionGame/Variant_Combat/AI",
-			"RhythmActionGame/Variant_Combat/Animation",
-			"RhythmActionGame/Variant_Combat/Gameplay",
-			"RhythmActionGame/Variant_Combat/Interfaces",
-			"RhythmActionGame/Variant_Combat/UI",
-			"RhythmActionGame/Variant_SideScrolling",
-			"RhythmActionGame/Variant_SideScrolling/AI",
-			"RhythmActionGame/Variant_SideScrolling/Gameplay",
-			"RhythmActionGame/Variant_SideScrolling/Interfaces",
-			"RhythmActionGame/Variant_SideScrolling/UI"
 		});
 
 		// Uncomment if you are using Slate UI
