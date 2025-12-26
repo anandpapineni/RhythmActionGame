@@ -1,82 +1,86 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Header file
 
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
-#include "Logging/LogMacros.h"
+#include "InputActionValue.h"
+#include "GameplayTagContainer.h"
+#include "EnhancedInputComponent.h" // For ETriggerEvent
+#include "Abilities/GameplayAbility.h"
 #include "RhythmActionGameCharacter.generated.h"
 
 class USpringArmComponent;
 class UCameraComponent;
 class UInputAction;
-struct FInputActionValue;
+class UAbilitySystemComponent;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
-
-/**
- *  A simple player-controllable third person character
- *  Implements a controllable orbiting camera
- */
-UCLASS(abstract)
-class ARhythmActionGameCharacter : public ACharacter
+USTRUCT(BlueprintType)
+struct FAbilityInputTrigger
 {
 	GENERATED_BODY()
 
-	/** Camera boom positioning the camera behind the character */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
-	USpringArmComponent* CameraBoom;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
+	UInputAction* TriggerAction = nullptr;
 
-	/** Follow camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* FollowCamera;
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
+	FGameplayTag TriggerTag;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
+	ETriggerEvent TriggerEvent = ETriggerEvent::Started;
+};
+
+/**
+ * Player character with movement input and gameplay tag-driven ability input system.
+ */
+UCLASS(abstract)
+class ARhythmActionGameCharacter : public ACharacter, public IAbilitySystemInterface
+{
+	GENERATED_BODY()
+
 protected:
 
-	/** Jump Input Action */
-	UPROPERTY(EditAnywhere, Category="Input")
-	UInputAction* JumpAction;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(AllowPrivateAccess="true"))
+	USpringArmComponent* CameraBoom;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(AllowPrivateAccess="true"))
+	UCameraComponent* FollowCamera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(AllowPrivateAccess="true"))
+	UAbilitySystemComponent* ASC;
 
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* MoveAction;
 
-	/** Look Input Action */
+	/** Look Input Action (e.g., right stick or mouse delta) */
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* LookAction;
-
-	/** Mouse Look Input Action */
+	
+	/** Array of input triggers mapping Input Actions to Gameplay Tags and TriggerEvent */
 	UPROPERTY(EditAnywhere, Category="Input")
-	UInputAction* MouseLookAction;
+	TArray<FAbilityInputTrigger> AbilityInputTriggers;
+	
+	UPROPERTY(EditAnywhere, Category="Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> Abilities;
 
 public:
+	ARhythmActionGameCharacter();
 
-	/** Constructor */
-	ARhythmActionGameCharacter();	
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return ASC; }
 
 protected:
-
-	/** Initialize input action bindings */
+	virtual void BeginPlay() override;
+	void TriggerAbility(const FInputActionValue& Value, FGameplayTag GameplayTag);
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-protected:
 
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
-
-	/** Called for looking input */
+	
+	/** Called for camera look input */
 	void Look(const FInputActionValue& Value);
-
-public:
-
-	/** Handles move inputs from either controls or UI interfaces */
-	UFUNCTION(BlueprintCallable, Category="Input")
-	virtual void DoMove(float Right, float Forward);
-
-	/** Handles look inputs from either controls or UI interfaces */
-	UFUNCTION(BlueprintCallable, Category="Input")
-	virtual void DoLook(float Yaw, float Pitch);
-
+	
 	/** Handles jump pressed inputs from either controls or UI interfaces */
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoJumpStart();
@@ -86,11 +90,6 @@ public:
 	virtual void DoJumpEnd();
 
 public:
-
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };
-

@@ -19,7 +19,8 @@ public class RhythmActionGame : ModuleRules
 			"GameplayStateTreeModule",
 			"UMG",
 			"Slate",
-			"GameplayAbilities"
+			"GameplayAbilities",
+			"GameplayTags"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
