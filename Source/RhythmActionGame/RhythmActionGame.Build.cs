@@ -21,6 +21,13 @@ public class RhythmActionGame : ModuleRules
 			"Slate",
 			"GameplayAbilities"
 		});
+		PublicDependencyModuleNames.AddRange(new string[] {
+			"Core",
+			"CoreUObject",
+			"Engine",
+			"HarmonixMetasound",
+			"HarmonixMidi"
+		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
 

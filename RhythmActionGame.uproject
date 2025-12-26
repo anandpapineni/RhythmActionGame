@@ -42,6 +42,10 @@
 		{
 			"Name": "ModelViewViewModel",
 			"Enabled": true
+		},
+		{
+			"Name": "Harmonix",
+			"Enabled": true
 		}
 	]
 }
