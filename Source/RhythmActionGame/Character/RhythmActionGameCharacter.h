@@ -25,11 +25,23 @@ struct FAbilityInputTrigger
 	UInputAction* TriggerAction = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
+	ETriggerEvent TriggerEvent = ETriggerEvent::Started;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
 	FGameplayTag TriggerTag;
+};
+USTRUCT(BlueprintType)
+struct FRhythmInputEvent
+{
+	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
-	ETriggerEvent TriggerEvent = ETriggerEvent::Started;
+	float EventTime = 0.f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
+	FGameplayEventData EventData;
 };
+
 
 /**
  * Player character with movement input and gameplay tag-driven ability input system.
@@ -49,6 +61,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(AllowPrivateAccess="true"))
 	UAbilitySystemComponent* ASC;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(AllowPrivateAccess="true"))
+	UAudioComponent* AudioComponent;
 
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
@@ -71,6 +86,9 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return ASC; }
 
 protected:
+	UFUNCTION()
+	void FlushBufferedEvents(int BeatNumber, int BeatInBar);
+	
 	virtual void BeginPlay() override;
 	void TriggerAbility(const FInputActionValue& Value, FGameplayTag GameplayTag);
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -92,4 +110,6 @@ protected:
 public:
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	
+	TArray<FRhythmInputEvent> BufferedInputs;
 };

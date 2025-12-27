@@ -19,6 +19,8 @@ void URhythmSubsystem::Deinitialize()
 void URhythmSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 {
 	RhythmClock = InWorld.SpawnActor<ARhythmClockActor>();
+	SetBPM(120);
+	SetTimeSignature(4, 4);
 }
 
 void URhythmSubsystem::Tick(float DeltaTime)
@@ -57,4 +59,9 @@ void URhythmSubsystem::PauseClock()
 void URhythmSubsystem::StopClock()
 {
 	RhythmClock->ClockComponent->Stop();
+}
+
+FBeatEvent& URhythmSubsystem::GetBeatEvent()
+{
+	return RhythmClock->ClockComponent->BeatEvent;
 }

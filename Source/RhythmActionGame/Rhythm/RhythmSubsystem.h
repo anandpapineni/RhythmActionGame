@@ -22,28 +22,29 @@ public:
 	TStatId GetStatId() const override { RETURN_QUICK_DECLARE_CYCLE_STAT(URhythmSubsystem, STATGROUP_Tickables); }
 	virtual void Deinitialize() override;
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
-	 virtual void Tick(float DeltaTime) override;
-	 virtual bool IsTickable() const override { return true; }
-	
-	 UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
-	 void SetBPM(float BPM);
-	
-	 UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
-	 void SetTimeSignature(int NumBeats, int BeatValue);
-	
-	 UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
-	 void ContinueClock();
-	
-	 UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
-	 void PauseClock();
+	virtual void Tick(float DeltaTime) override;
+	virtual bool IsTickable() const override { return true; }
+
+	UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
+	void SetBPM(float BPM);
+
+	UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
+	void SetTimeSignature(int NumBeats, int BeatValue);
+
+	UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
+	void ContinueClock();
+
+	UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
+	void PauseClock();
 	
 	UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
 	void StartClock();
 	
-	 UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
-	 void StopClock();
+	UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
+	void StopClock();
 	
-	
+	FBeatEvent& GetBeatEvent();
+private:
 	UPROPERTY()
 	TObjectPtr<ARhythmClockActor> RhythmClock;
 		
