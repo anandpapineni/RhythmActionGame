@@ -8,9 +8,6 @@
 void URhythmSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	
-	RhythmClock = NewObject<UMusicClockComponent>(this, UMusicClockComponent::StaticClass(), TEXT("WorldRhythmClock"));
-	
 }
 
 
@@ -19,9 +16,9 @@ void URhythmSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
-void OnWorldBeginPlay(UWorld& InWorld)
+void URhythmSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 {
-	ARhythmClockActor RhythmClock = ARhythmClockActor();
+	RhythmClock = InWorld.SpawnActor<ARhythmClockActor>();
 }
 
 void URhythmSubsystem::Tick(float DeltaTime)
@@ -29,35 +26,35 @@ void URhythmSubsystem::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-TStatId URhythmSubsystem::GetStatId() const
-{
-	return Super::GetStatId();
-}
 
 void URhythmSubsystem::SetBPM(float BPM)
 {
-	RhythmClock->SetDefaultTempo(BPM);
+	RhythmClock->ClockComponent->SetDefaultTempo(BPM);
 }
 
-void URhythmSubsystem::SetTimeSignature(int NumBeats, int BeatValue)
+void URhythmSubsystem::SetTimeSignature(int32 NumBeats, int32 BeatValue)
 {
-	RhythmClock->SetDefaultTimeSignatureNum(NumBeats);
-	RhythmClock->SetDefaultTimeSignatureDenom(BeatValue);
+	// Set time signature to 4/4 (4 beats per bar, quarter note)
+	RhythmClock->ClockComponent->SetDefaultTimeSignatureNum(NumBeats);
+	RhythmClock->ClockComponent->SetDefaultTimeSignatureDenom(BeatValue);		// Set BPM to 120 beats per minute
 }
 
 void URhythmSubsystem::StartClock()
 {
-	RhythmClock->BeginPlay();
+	RhythmClock->ClockComponent->Start();
 }
-void URhythmSubsystem::PlayClock()
+
+void URhythmSubsystem::ContinueClock()
 {
-	//RhythmClock->PlayClock();
+	RhythmClock->ClockComponent->Continue();
 }
 
 void URhythmSubsystem::PauseClock()
 {
+	RhythmClock->ClockComponent->Pause();
 }
 
 void URhythmSubsystem::StopClock()
 {
+	RhythmClock->ClockComponent->Stop();
 }

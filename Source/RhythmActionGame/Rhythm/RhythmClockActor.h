@@ -23,12 +23,8 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	UPROPERTY(VisibleAnywhere, Category="Music")
-	TObjectPtr<UMusicClockComponent> RhythmClock;
+	friend class URhythmSubsystem;
 	
-	void SetupClock();
-	void StartClock();
-	void PlayClock();
-	void PauseClock();
-	void StopClock();
+	UPROPERTY(VisibleAnywhere, Category="Music")
+	TObjectPtr<UMusicClockComponent> ClockComponent;
 };

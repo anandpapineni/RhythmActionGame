@@ -8,7 +8,7 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "RhythmSubsystem.generated.h"
 
-
+class ARhythmClockActor;
 /**
  * 
  */
@@ -17,15 +17,12 @@ class RHYTHMACTIONGAME_API URhythmSubsystem : public UTickableWorldSubsystem
 {
 	GENERATED_BODY()
 	
-	
-	
-	public:
+public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	
+	TStatId GetStatId() const override { RETURN_QUICK_DECLARE_CYCLE_STAT(URhythmSubsystem, STATGROUP_Tickables); }
 	virtual void Deinitialize() override;
- 
+	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 	 virtual void Tick(float DeltaTime) override;
-	 virtual TStatId GetStatId() const override;
 	 virtual bool IsTickable() const override { return true; }
 	
 	 UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
@@ -35,7 +32,7 @@ class RHYTHMACTIONGAME_API URhythmSubsystem : public UTickableWorldSubsystem
 	 void SetTimeSignature(int NumBeats, int BeatValue);
 	
 	 UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
-	 void PlayClock();
+	 void ContinueClock();
 	
 	 UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
 	 void PauseClock();
@@ -45,12 +42,10 @@ class RHYTHMACTIONGAME_API URhythmSubsystem : public UTickableWorldSubsystem
 	
 	 UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
 	 void StopClock();
-    
-	TObjectPtr<UMusicClockComponent> GetRhythmClock() const {return RhythmClock;}
 	
-    private:
+	
 	UPROPERTY()
-	TObjectPtr<UMusicClockComponent> RhythmClock;
+	TObjectPtr<ARhythmClockActor> RhythmClock;
 		
 };
 
