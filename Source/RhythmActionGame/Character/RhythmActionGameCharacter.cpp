@@ -7,6 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "AbilitySystemComponent.h"
 #include "InputAction.h"
+#include "Attributes/CombatAttributes.h"
 
 ARhythmActionGameCharacter::ARhythmActionGameCharacter()
 {
@@ -24,6 +25,7 @@ ARhythmActionGameCharacter::ARhythmActionGameCharacter()
 void ARhythmActionGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	ASC->AddAttributeSetSubobject(NewObject<UCombatAttributes>(ASC));
 	for (TSubclassOf<UGameplayAbility>& Ability : Abilities)
 	{
 		FGameplayAbilitySpec AbilitySpec;

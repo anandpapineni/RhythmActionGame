@@ -31,7 +31,7 @@ void URhythmSubsystem::Tick(float DeltaTime)
 
 TStatId URhythmSubsystem::GetStatId() const
 {
-	return Super::GetStatId();
+	RETURN_QUICK_DECLARE_CYCLE_STAT(URhythmSubsystem, STATGROUP_Tickables);
 }
 
 void URhythmSubsystem::SetBPM(float BPM)
