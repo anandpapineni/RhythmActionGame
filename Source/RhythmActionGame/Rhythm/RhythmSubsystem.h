@@ -21,26 +21,30 @@ class RHYTHMACTIONGAME_API URhythmSubsystem : public UTickableWorldSubsystem
 	
 	public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	
 	virtual void Deinitialize() override;
  
-	virtual void Tick(float DeltaTime) override;
-	virtual TStatId GetStatId() const override;
-	virtual bool IsTickable() const override { return true; }
+	 virtual void Tick(float DeltaTime) override;
+	 virtual TStatId GetStatId() const override;
+	 virtual bool IsTickable() const override { return true; }
+	
+	 UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
+	 void SetBPM(float BPM);
+	
+	 UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
+	 void SetTimeSignature(int NumBeats, int BeatValue);
+	
+	 UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
+	 void PlayClock();
+	
+	 UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
+	 void PauseClock();
 	
 	UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
-	void SetBPM(float BPM);
+	void StartClock();
 	
-	UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
-	void SetTimeSignature(int NumBeats, int BeatValue);
-	
-	UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
-	void PlayClock();
-	
-	UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
-	void PauseClock();
-	
-	UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
-	void StopClock();
+	 UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
+	 void StopClock();
     
 	TObjectPtr<UMusicClockComponent> GetRhythmClock() const {return RhythmClock;}
 	
