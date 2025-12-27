@@ -64,3 +64,8 @@ void URhythmSubsystem::StopClock()
 {
 	RhythmClock->ClockComponent->Stop();
 }
+
+FBeatEvent& URhythmSubsystem::GetBeatEvent()
+{
+	return RhythmClock->ClockComponent->BeatEvent;
+}

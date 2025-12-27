@@ -24,6 +24,7 @@ public:
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 	virtual void Tick(float DeltaTime) override;
 	virtual bool IsTickable() const override { return true; }
+
 	
 	UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
 	void SetBPM(float NewBPM);
@@ -43,8 +44,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "RhythmSubsystem")
 	void StopClock();
 	
-	UPROPERTY()
-	TObjectPtr<ARhythmClockActor> RhythmClock;
+	FBeatEvent& GetBeatEvent();
 	
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category="Config")
 	float BPM = 120.0f;
@@ -52,6 +52,11 @@ public:
 	int TimeSigNum = 4;
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category="Config")
 	int TimeSigDenom = 4;
+	
+	
+private:
+	UPROPERTY()
+	TObjectPtr<ARhythmClockActor> RhythmClock;
 	
 };
 
