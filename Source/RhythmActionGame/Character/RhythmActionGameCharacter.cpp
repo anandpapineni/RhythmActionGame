@@ -8,6 +8,9 @@
 #include "AbilitySystemComponent.h"
 #include "InputAction.h"
 #include "Attributes/CombatAttributes.h"
+#include "Components/AudioComponent.h"
+#include "Rhythm/RhythmClockActor.h"
+#include "Rhythm/RhythmSubsystem.h"
 
 ARhythmActionGameCharacter::ARhythmActionGameCharacter()
 {
@@ -20,6 +23,18 @@ ARhythmActionGameCharacter::ARhythmActionGameCharacter()
 	FollowCamera->SetupAttachment(CameraBoom);
 
 	ASC = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
+}
+
+void ARhythmActionGameCharacter::FlushBufferedEvents(int BeatNumber, int BeatInBar)
+{
+	for (FRhythmInputEvent& RhythmEvent : BufferedInputs)
+	{
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, RhythmEvent.EventData.EventTag, RhythmEvent.EventData);
+	}
+	BufferedInputs.Empty();
+	AudioComponent->Play();
 }
 
 void ARhythmActionGameCharacter::BeginPlay()
@@ -32,13 +47,17 @@ void ARhythmActionGameCharacter::BeginPlay()
 		AbilitySpec = ASC->BuildAbilitySpecFromClass(Ability);
 		ASC->GiveAbility(AbilitySpec);
 	}
+	
+	GetWorld()->GetSubsystem<URhythmSubsystem>()->GetBeatEvent().AddUniqueDynamic(this, &ARhythmActionGameCharacter::FlushBufferedEvents);
 }
 
 void ARhythmActionGameCharacter::TriggerAbility(const FInputActionValue& Value, FGameplayTag GameplayTag)
 {
 	FGameplayEventData EventData;
+	EventData.EventTag = GameplayTag;
 	EventData.EventMagnitude = Value.GetMagnitude();
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, GameplayTag, EventData);
+	
+	BufferedInputs.Emplace(GetWorld()->GetTimeSeconds(), EventData);
 }
 
 void ARhythmActionGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
